@@ -671,7 +671,10 @@ async def jugar_set(pantalla, reloj, fuente, fuente_small, fuente_titulo,
 #  BUCLE PRINCIPAL
 # ─────────────────────────────────────────
 async def main():
-    pygame.init()
+    # Inicializar solo los módulos necesarios — mixer y joystick no se usan
+    # y causan errores NS_ERROR_NOT_AVAILABLE en Firefox/WASM antes de interacción de usuario
+    pygame.display.init()
+    pygame.font.init()
     pantalla = pygame.display.set_mode((ANCHO, ALTO))
     pygame.display.set_caption("MATEPONG")
     reloj = pygame.time.Clock()
