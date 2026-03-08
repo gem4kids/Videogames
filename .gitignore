@@ -16,3 +16,7 @@ __pycache__/
 # Archivos ocultos del sistema operativo (Mac/Windows)
 .DS_Store
 Thumbs.db
+
+# Partidas guardadas y rankings locales
+ranking.json
+*.json
