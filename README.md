@@ -27,5 +27,5 @@ Si quieres probar los juegos localmente, sigue estos sencillos pasos:
 
 ### 1. Clonar el repositorio
 ```bash
-git clone [https://github.com/TU_USUARIO/videogames.git](https://github.com/TU_USUARIO/videogames.git)
+git clone [https://github.com/gem4kids/videogames.git](https://github.com/gem4kids/videogames.git)
 cd videogames
