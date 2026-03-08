@@ -39,6 +39,11 @@ jobs:
           curl -sL "https://cdn.jsdelivr.net/npm/browserfs/dist/browserfs.min.js" -o docs/browserfs.min.js
           sed -i 's|<script src="https://pygame-web.github.io/cdn/0.9.3/[/]*browserfs.min.js"></script>|<script src="browserfs.min.js"></script>|g' docs/index.html
 
+      - name: Inyectar handler UME para activar pygbag al clic
+        run: |
+          # pygbag espera window.MM.UME=true — sin este handler el juego nunca arranca
+          python3 .github/scripts/inject_ume.py
+
       - name: Commit y push de /docs actualizado
         run: |
           git config user.name "github-actions[bot]"

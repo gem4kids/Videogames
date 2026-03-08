@@ -377,6 +377,14 @@ frameborder="1"
         console.warn("TODO: panda3d canvas monitor", self, ecw, ech)
     }
 
+    // MATEPONG: activar UME al primer clic/toque para que pygbag arranque
+    document.addEventListener('click', function() {
+        if (window.MM) window.MM.UME = true;
+    }, {once: true});
+    document.addEventListener('touchstart', function() {
+        if (window.MM) window.MM.UME = true;
+    }, {once: true});
+
     async function custom_onload(debug_hidden) {
         // this is called before anything python is loaded
         // make your js customization here
