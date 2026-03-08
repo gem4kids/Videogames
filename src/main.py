@@ -1,9 +1,9 @@
 import asyncio
-from pong import main as _pong_main
 
-# Definir main() localmente para compatibilidad con pygbag
-# (pygbag necesita ver async def main() en este archivo)
 async def main():
+    # Importar dentro de la corrutina para que ocurra después de que
+    # pygbag haya inicializado el entorno WASM completamente
+    from pong import main as _pong_main
     await _pong_main()
 
 asyncio.run(main())
