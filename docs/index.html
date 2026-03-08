@@ -152,7 +152,7 @@ config = {
     ume_block : 1,
     can_close : 0,
     archive : "src",
-    gui_debug : 2,
+    gui_debug : 0,
     cdn : "https://pygame-web.github.io/cdn/0.9.3/",
     autorun : 0,
     PYBUILD : "3.12",
@@ -382,11 +382,12 @@ frameborder="1"
         // make your js customization here
         console.log(__FILE__, "custom_onload")
 
-        pyconsole.hidden = debug_hidden
-        system.hidden = debug_hidden
+        // Forzar debug visible para capturar errores Python
+        pyconsole.hidden = false
+        system.hidden = false
         transfer.hidden = debug_hidden
         info.hidden = debug_hidden
-        box.hidden =  debug_hidden
+        box.hidden = false
 
         show_infobox()
     }
