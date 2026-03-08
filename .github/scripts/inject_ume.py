@@ -28,18 +28,24 @@ UME_HANDLER = (
     "    });\n\n"
 )
 
+# Intentar el marcador de 0.9.3 primero, luego el de 0.9.2
 MARKER = "globalThis.__canvas_resized"
+MARKER_092 = "async function custom_onload"
 
 with open("docs/index.html", "r") as f:
     html = f.read()
 
 if "addEventListener('click'" not in html:
-    if MARKER not in html:
+    if MARKER in html:
+        marker = MARKER
+    elif MARKER_092 in html:
+        marker = MARKER_092
+    else:
         print("ERROR: marcador no encontrado en index.html")
         raise SystemExit(1)
-    html = html.replace(MARKER, UME_HANDLER + MARKER)
+    html = html.replace(marker, UME_HANDLER + marker, 1)
     with open("docs/index.html", "w") as f:
         f.write(html)
-    print("UME handler inyectado correctamente")
+    print(f"UME handler inyectado correctamente (marcador: {marker[:30]}...)")
 else:
     print("UME handler ya presente, sin cambios")

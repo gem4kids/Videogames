@@ -23,7 +23,7 @@ jobs:
 
       - name: Instalar dependencias
         run: |
-          pip install pygame pygbag
+          pip install pygame pygbag==0.9.2
 
       - name: Build con pygbag
         run: |
@@ -37,7 +37,11 @@ jobs:
         run: |
           # El CDN de pygbag devuelve 404 para browserfs.min.js — se descarga de jsdelivr
           curl -sL "https://cdn.jsdelivr.net/npm/browserfs/dist/browserfs.min.js" -o docs/browserfs.min.js
-          sed -i 's|<script src="https://pygame-web.github.io/cdn/0.9.3/[/]*browserfs.min.js"></script>|<script src="browserfs.min.js"></script>|g' docs/index.html
+          # Reemplaza referencia a browserfs del CDN (con o sin doble barra) por la local
+          sed -i 's|<script src="https://pygame-web.github.io/[^"]*browserfs.min.js"></script>|<script src="browserfs.min.js"></script>|g' docs/index.html
+          # Desactivar audio y ume_block para arranque directo
+          sed -i 's/data-os=vtx,fs,snd,gui/data-os=vtx,fs,gui/' docs/index.html
+          sed -i 's/ume_block : 1/ume_block : 0/' docs/index.html
 
       - name: Inyectar handler UME para activar pygbag al clic
         run: |
