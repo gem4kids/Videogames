@@ -1,3 +1,4 @@
+import asyncio
 import pygame
 import sys
 import random
@@ -343,8 +344,8 @@ def dibujar_marcador(pantalla, fuente, fuente_small, fuente_titulo,
 # ─────────────────────────────────────────
 #  PANTALLA: INTRODUCIR NOMBRE
 # ─────────────────────────────────────────
-def pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small,
-                 num_jugador: int, color: tuple) -> str:
+async def pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small,
+                       num_jugador: int, color: tuple) -> str:
     """Muestra una pantalla para que el jugador escriba su nombre (máx. 12 caracteres)."""
     nombre = ""
     while True:
@@ -379,13 +380,14 @@ def pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small,
         pantalla.blit(caja, (ANCHO // 2 - caja.get_width() // 2, ALTO // 2 + 8))
 
         pygame.display.flip()
+        await asyncio.sleep(0)
         reloj.tick(FPS)
 
 
 # ─────────────────────────────────────────
 #  PANTALLA: INICIO + RANKING
 # ─────────────────────────────────────────
-def pantalla_inicio(pantalla, reloj, fuente_titulo, fuente, fuente_small):
+async def pantalla_inicio(pantalla, reloj, fuente_titulo, fuente, fuente_small):
     """Muestra la pantalla de inicio con el ranking de partidas más rápidas."""
     ranking = cargar_ranking()
     while True:
@@ -443,16 +445,17 @@ def pantalla_inicio(pantalla, reloj, fuente_titulo, fuente, fuente_small):
             pantalla.blit(play, (ANCHO // 2 - play.get_width() // 2, ALTO - 60))
 
         pygame.display.flip()
+        await asyncio.sleep(0)
         reloj.tick(FPS)
 
 
 # ─────────────────────────────────────────
 #  PANTALLA: FIN DE SET
 # ─────────────────────────────────────────
-def pantalla_fin_set(pantalla, reloj, fuente_titulo, fuente, fuente_small,
-                     ganador_set: str, color_ganador: tuple,
-                     sets_izq: int, sets_der: int,
-                     nombre_izq: str, nombre_der: str):
+async def pantalla_fin_set(pantalla, reloj, fuente_titulo, fuente, fuente_small,
+                           ganador_set: str, color_ganador: tuple,
+                           sets_izq: int, sets_der: int,
+                           nombre_izq: str, nombre_der: str):
     """Muestra el resultado del set y espera ESPACIO para continuar."""
     while True:
         for evento in pygame.event.get():
@@ -477,15 +480,16 @@ def pantalla_fin_set(pantalla, reloj, fuente_titulo, fuente, fuente_small,
             pantalla.blit(t3,   (ANCHO // 2 - t3.get_width()       // 2, ALTO // 2 + 110))
 
         pygame.display.flip()
+        await asyncio.sleep(0)
         reloj.tick(FPS)
 
 
 # ─────────────────────────────────────────
 #  PANTALLA: FIN DE PARTIDA
 # ─────────────────────────────────────────
-def pantalla_fin_partida(pantalla, reloj, fuente_titulo, fuente, fuente_small,
-                          ganador: str, color_ganador: tuple,
-                          rival: str, segundos: float):
+async def pantalla_fin_partida(pantalla, reloj, fuente_titulo, fuente, fuente_small,
+                               ganador: str, color_ganador: tuple,
+                               rival: str, segundos: float):
     """Muestra al ganador de la partida y guarda el ranking."""
     registrar_victoria(ganador, rival, segundos)
     mins = int(segundos) // 60
@@ -514,13 +518,14 @@ def pantalla_fin_partida(pantalla, reloj, fuente_titulo, fuente, fuente_small,
                           (ANCHO // 2 - fuente_small.size("ESPACIO / ESC para volver al inicio")[0] // 2, 430))
 
         pygame.display.flip()
+        await asyncio.sleep(0)
         reloj.tick(FPS)
 
 
 # ─────────────────────────────────────────
 #  JUGAR UN SET  (incluye lógica de potenciadores)
 # ─────────────────────────────────────────
-def jugar_set(pantalla, reloj, fuente, fuente_small, fuente_titulo,
+async def jugar_set(pantalla, reloj, fuente, fuente_small, fuente_titulo,
               nombre_izq, nombre_der,
               sets_izq, sets_der,
               tiempo_inicio_partida: float) -> str:
@@ -650,13 +655,14 @@ def jugar_set(pantalla, reloj, fuente, fuente_small, fuente_titulo,
         pelota.dibujar(pantalla)
 
         pygame.display.flip()
+        await asyncio.sleep(0)
         reloj.tick(FPS)
 
 
 # ─────────────────────────────────────────
 #  BUCLE PRINCIPAL
 # ─────────────────────────────────────────
-def main():
+async def main():
     pygame.init()
     pantalla = pygame.display.set_mode((ANCHO, ALTO))
     pygame.display.set_caption("MATEPONG")
@@ -669,11 +675,11 @@ def main():
 
     while True:
         # Pantalla de inicio con ranking
-        pantalla_inicio(pantalla, reloj, fuente_titulo, fuente, fuente_small)
+        await pantalla_inicio(pantalla, reloj, fuente_titulo, fuente, fuente_small)
 
         # Pedir nombres de los jugadores
-        nombre_izq = pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 1, VERDE_NEON)
-        nombre_der = pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 2, ROJO_NEON)
+        nombre_izq = await pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 1, VERDE_NEON)
+        nombre_der = await pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 2, ROJO_NEON)
 
         # Partida: mejor de 3 sets
         sets_izq      = 0
@@ -681,7 +687,7 @@ def main():
         tiempo_inicio = time.time()
 
         while sets_izq < SETS_PARA_GANAR and sets_der < SETS_PARA_GANAR:
-            ganador_set = jugar_set(
+            ganador_set = await jugar_set(
                 pantalla, reloj, fuente, fuente_small, fuente_titulo,
                 nombre_izq, nombre_der,
                 sets_izq, sets_der,
@@ -698,7 +704,7 @@ def main():
 
             # Pantalla de fin de set solo si la partida continúa
             if sets_izq < SETS_PARA_GANAR and sets_der < SETS_PARA_GANAR:
-                pantalla_fin_set(
+                await pantalla_fin_set(
                     pantalla, reloj, fuente_titulo, fuente, fuente_small,
                     nombre_gan_set, color_gan_set,
                     sets_izq, sets_der, nombre_izq, nombre_der
@@ -711,11 +717,12 @@ def main():
         else:
             ganador_final, rival_final, color_final = nombre_der, nombre_izq, ROJO_NEON
 
-        pantalla_fin_partida(
+        await pantalla_fin_partida(
             pantalla, reloj, fuente_titulo, fuente, fuente_small,
             ganador_final, color_final, rival_final, segundos_totales
         )
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
