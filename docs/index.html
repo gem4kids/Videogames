@@ -152,7 +152,7 @@ config = {
     ume_block : 1,
     can_close : 0,
     archive : "src",
-    gui_debug : 0,
+    gui_debug : 2,
     cdn : "https://pygame-web.github.io/cdn/0.9.3/",
     autorun : 0,
     PYBUILD : "3.12",
@@ -373,11 +373,7 @@ frameborder="1"
 
     <script type="application/javascript">
 
-    globalThis.__canvas_resized = (self, ecw, ech) => {
-        console.warn("TODO: panda3d canvas monitor", self, ecw, ech)
-    }
-
-    // MATEPONG: activar UME al primer clic/toque para que pygbag arranque
+        // MATEPONG: activar UME al primer clic/toque para que pygbag arranque
     document.addEventListener('click', function() {
         if (window.MM) window.MM.UME = true;
     }, {once: true});
@@ -385,17 +381,20 @@ frameborder="1"
         if (window.MM) window.MM.UME = true;
     }, {once: true});
 
+globalThis.__canvas_resized = (self, ecw, ech) => {
+        console.warn("TODO: panda3d canvas monitor", self, ecw, ech)
+    }
+
     async function custom_onload(debug_hidden) {
         // this is called before anything python is loaded
         // make your js customization here
         console.log(__FILE__, "custom_onload")
 
-        // Forzar debug visible para capturar errores Python
-        pyconsole.hidden = false
-        system.hidden = false
+        pyconsole.hidden = debug_hidden
+        system.hidden = debug_hidden
         transfer.hidden = debug_hidden
         info.hidden = debug_hidden
-        box.hidden = false
+        box.hidden =  debug_hidden
 
         show_infobox()
     }

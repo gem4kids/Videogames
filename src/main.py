@@ -1,9 +1,14 @@
 import asyncio
+import pygame
 
 async def main():
-    # Importar dentro de la corrutina para que ocurra después de que
-    # pygbag haya inicializado el entorno WASM completamente
-    from pong import main as _pong_main
-    await _pong_main()
+    pygame.display.init()
+    screen = pygame.display.set_mode((400, 300))
+    clock = pygame.time.Clock()
+    while True:
+        screen.fill((0, 100, 0))
+        pygame.display.flip()
+        await asyncio.sleep(0)
+        clock.tick(60)
 
 asyncio.run(main())

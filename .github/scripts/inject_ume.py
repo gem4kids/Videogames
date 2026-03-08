@@ -19,7 +19,7 @@ MARKER = "globalThis.__canvas_resized"
 with open("docs/index.html", "r") as f:
     html = f.read()
 
-if "window.MM.UME" not in html:
+if "addEventListener('click'" not in html:
     if MARKER not in html:
         print("ERROR: marcador no encontrado en index.html")
         raise SystemExit(1)
