@@ -33,9 +33,10 @@ jobs:
         run: |
           cp -r src/build/web/. docs/
 
-      - name: Descargar browserfs.min.js localmente y actualizar referencia en index.html
+      - name: Descargar browserfs.min.js real (jsdelivr) y actualizar referencia en index.html
         run: |
-          curl -sL "https://pygame-web.github.io/cdn/0.9.3/browserfs.min.js" -o docs/browserfs.min.js
+          # El CDN de pygbag devuelve 404 para browserfs.min.js — se descarga de jsdelivr
+          curl -sL "https://cdn.jsdelivr.net/npm/browserfs/dist/browserfs.min.js" -o docs/browserfs.min.js
           sed -i 's|<script src="https://pygame-web.github.io/cdn/0.9.3/[/]*browserfs.min.js"></script>|<script src="browserfs.min.js"></script>|g' docs/index.html
 
       - name: Commit y push de /docs actualizado
