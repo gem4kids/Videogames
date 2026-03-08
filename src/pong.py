@@ -50,16 +50,24 @@ RADIO_POWERUP = 20
 #  RANKING: carga y guardado en JSON
 # ─────────────────────────────────────────
 def cargar_ranking() -> list:
-    """Lee el archivo de ranking y devuelve la lista ordenada por tiempo."""
-    if not os.path.exists(ARCHIVO_RANKING):
+    """Lee el archivo de ranking y devuelve la lista ordenada por tiempo.
+    Devuelve lista vacía si el archivo no existe o no se puede leer (ej. entorno web)."""
+    try:
+        if not os.path.exists(ARCHIVO_RANKING):
+            return []
+        with open(ARCHIVO_RANKING, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
         return []
-    with open(ARCHIVO_RANKING, "r", encoding="utf-8") as f:
-        return json.load(f)
 
 def guardar_ranking(ranking: list) -> None:
-    """Guarda la lista de ranking en el archivo JSON."""
-    with open(ARCHIVO_RANKING, "w", encoding="utf-8") as f:
-        json.dump(ranking, f, ensure_ascii=False, indent=2)
+    """Guarda la lista de ranking en el archivo JSON.
+    Silencia errores de escritura en entorno web (sistema de archivos WASM)."""
+    try:
+        with open(ARCHIVO_RANKING, "w", encoding="utf-8") as f:
+            json.dump(ranking, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
 
 def registrar_victoria(ganador: str, rival: str, segundos: float) -> None:
     """Añade una nueva entrada al ranking y mantiene solo las 8 mejores."""
