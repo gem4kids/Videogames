@@ -6,12 +6,23 @@ Sin este handler, el juego se queda en bucle esperando interacción.
 
 UME_HANDLER = (
     "    // MATEPONG: activar UME al primer clic/toque para que pygbag arranque\n"
+    "    // once:false para que funcione aunque el infobox consuma el evento\n"
     "    document.addEventListener('click', function() {\n"
     "        if (window.MM) window.MM.UME = true;\n"
-    "    }, {once: true});\n"
+    "    }, {once: false});\n"
     "    document.addEventListener('touchstart', function() {\n"
     "        if (window.MM) window.MM.UME = true;\n"
-    "    }, {once: true});\n\n"
+    "    }, {once: false});\n\n"
+    "    // Listener directo en #infobox por si el clic no se propaga al document\n"
+    "    var infobox = document.getElementById('infobox');\n"
+    "    if (infobox) {\n"
+    "        infobox.addEventListener('click', function() {\n"
+    "            if (window.MM) window.MM.UME = true;\n"
+    "        });\n"
+    "        infobox.addEventListener('touchstart', function() {\n"
+    "            if (window.MM) window.MM.UME = true;\n"
+    "        });\n"
+    "    }\n\n"
 )
 
 MARKER = "globalThis.__canvas_resized"

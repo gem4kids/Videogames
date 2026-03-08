@@ -373,13 +373,25 @@ frameborder="1"
 
     <script type="application/javascript">
 
-        // MATEPONG: activar UME al primer clic/toque para que pygbag arranque
+    // MATEPONG: activar UME al primer clic/toque para que pygbag arranque
+    // once:false para que funcione aunque el infobox consuma el evento
     document.addEventListener('click', function() {
         if (window.MM) window.MM.UME = true;
-    }, {once: true});
+    }, {once: false});
     document.addEventListener('touchstart', function() {
         if (window.MM) window.MM.UME = true;
-    }, {once: true});
+    }, {once: false});
+
+    // Listener directo en #infobox por si el clic no se propaga al document
+    var infobox = document.getElementById('infobox');
+    if (infobox) {
+        infobox.addEventListener('click', function() {
+            if (window.MM) window.MM.UME = true;
+        });
+        infobox.addEventListener('touchstart', function() {
+            if (window.MM) window.MM.UME = true;
+        });
+    }
 
 globalThis.__canvas_resized = (self, ecw, ech) => {
         console.warn("TODO: panda3d canvas monitor", self, ecw, ech)
