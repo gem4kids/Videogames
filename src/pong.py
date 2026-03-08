@@ -671,77 +671,68 @@ async def jugar_set(pantalla, reloj, fuente, fuente_small, fuente_titulo,
 #  BUCLE PRINCIPAL
 # ─────────────────────────────────────────
 async def main():
-    try:
-        # Inicializar solo los módulos necesarios — mixer y joystick no se usan
-        # y causan errores NS_ERROR_NOT_AVAILABLE en Firefox/WASM antes de interacción de usuario
-        pygame.display.init()
-        pygame.font.init()
-        pantalla = pygame.display.set_mode((ANCHO, ALTO))
-        pygame.display.set_caption("MATEPONG")
-        reloj = pygame.time.Clock()
+    # Inicializar solo los módulos necesarios — mixer y joystick no se usan
+    # y causan errores NS_ERROR_NOT_AVAILABLE en Firefox/WASM antes de interacción de usuario
+    pygame.display.init()
+    pygame.font.init()
+    pantalla = pygame.display.set_mode((ANCHO, ALTO))
+    pygame.display.set_caption("MATEPONG")
+    reloj = pygame.time.Clock()
 
-        # Fuentes monospace para aspecto retro arcade
-        fuente_titulo = pygame.font.SysFont("Courier New", 60, bold=True)
-        fuente        = pygame.font.SysFont("Courier New", 36, bold=True)
-        fuente_small  = pygame.font.SysFont("Courier New", 18)
+    # Fuentes monospace para aspecto retro arcade
+    fuente_titulo = pygame.font.SysFont("Courier New", 60, bold=True)
+    fuente        = pygame.font.SysFont("Courier New", 36, bold=True)
+    fuente_small  = pygame.font.SysFont("Courier New", 18)
 
-        while True:
-            # Pantalla de inicio con ranking
-            await pantalla_inicio(pantalla, reloj, fuente_titulo, fuente, fuente_small)
+    while True:
+        # Pantalla de inicio con ranking
+        await pantalla_inicio(pantalla, reloj, fuente_titulo, fuente, fuente_small)
 
-            # Pedir nombres de los jugadores
-            nombre_izq = await pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 1, VERDE_NEON)
-            nombre_der = await pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 2, ROJO_NEON)
+        # Pedir nombres de los jugadores
+        nombre_izq = await pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 1, VERDE_NEON)
+        nombre_der = await pedir_nombre(pantalla, reloj, fuente_titulo, fuente, fuente_small, 2, ROJO_NEON)
 
-            # Partida: mejor de 3 sets
-            sets_izq      = 0
-            sets_der      = 0
-            tiempo_inicio = time.time()
+        # Partida: mejor de 3 sets
+        sets_izq      = 0
+        sets_der      = 0
+        tiempo_inicio = time.time()
 
-            while sets_izq < SETS_PARA_GANAR and sets_der < SETS_PARA_GANAR:
-                ganador_set = await jugar_set(
-                    pantalla, reloj, fuente, fuente_small, fuente_titulo,
-                    nombre_izq, nombre_der,
-                    sets_izq, sets_der,
-                    tiempo_inicio
-                )
-                if ganador_set == "izq":
-                    sets_izq      += 1
-                    nombre_gan_set = nombre_izq
-                    color_gan_set  = VERDE_NEON
-                else:
-                    sets_der      += 1
-                    nombre_gan_set = nombre_der
-                    color_gan_set  = ROJO_NEON
-
-                # Pantalla de fin de set solo si la partida continúa
-                if sets_izq < SETS_PARA_GANAR and sets_der < SETS_PARA_GANAR:
-                    await pantalla_fin_set(
-                        pantalla, reloj, fuente_titulo, fuente, fuente_small,
-                        nombre_gan_set, color_gan_set,
-                        sets_izq, sets_der, nombre_izq, nombre_der
-                    )
-
-            # Fin de la partida
-            segundos_totales = time.time() - tiempo_inicio
-            if sets_izq >= SETS_PARA_GANAR:
-                ganador_final, rival_final, color_final = nombre_izq, nombre_der, VERDE_NEON
-            else:
-                ganador_final, rival_final, color_final = nombre_der, nombre_izq, ROJO_NEON
-
-            await pantalla_fin_partida(
-                pantalla, reloj, fuente_titulo, fuente, fuente_small,
-                ganador_final, color_final, rival_final, segundos_totales
+        while sets_izq < SETS_PARA_GANAR and sets_der < SETS_PARA_GANAR:
+            ganador_set = await jugar_set(
+                pantalla, reloj, fuente, fuente_small, fuente_titulo,
+                nombre_izq, nombre_der,
+                sets_izq, sets_der,
+                tiempo_inicio
             )
-            await asyncio.sleep(0)
+            if ganador_set == "izq":
+                sets_izq      += 1
+                nombre_gan_set = nombre_izq
+                color_gan_set  = VERDE_NEON
+            else:
+                sets_der      += 1
+                nombre_gan_set = nombre_der
+                color_gan_set  = ROJO_NEON
 
-    except Exception as e:
-        import traceback
-        print("ERROR EN MATEPONG:", e)
-        traceback.print_exc()
-        # Mantener vivo el loop para que el error sea visible en el terminal de pygbag
-        while True:
-            await asyncio.sleep(1)
+            # Pantalla de fin de set solo si la partida continúa
+            if sets_izq < SETS_PARA_GANAR and sets_der < SETS_PARA_GANAR:
+                await pantalla_fin_set(
+                    pantalla, reloj, fuente_titulo, fuente, fuente_small,
+                    nombre_gan_set, color_gan_set,
+                    sets_izq, sets_der, nombre_izq, nombre_der
+                )
+
+        # Fin de la partida
+        segundos_totales = time.time() - tiempo_inicio
+        if sets_izq >= SETS_PARA_GANAR:
+            ganador_final, rival_final, color_final = nombre_izq, nombre_der, VERDE_NEON
+        else:
+            ganador_final, rival_final, color_final = nombre_der, nombre_izq, ROJO_NEON
+
+        await pantalla_fin_partida(
+            pantalla, reloj, fuente_titulo, fuente, fuente_small,
+            ganador_final, color_final, rival_final, segundos_totales
+        )
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
