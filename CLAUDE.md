@@ -98,5 +98,12 @@ El archivo está organizado en estas secciones, en este orden:
 - **Build web local:** `python3 -m pygbag --build src` (output en `src/build/web/`)
 
 ## 11. URLs del proyecto
-- **GitHub Pages:** `https://git4kids.github.io/Videogames/` *(activo tras el primer push a main)*
-- **Repositorio:** `https://github.com/git4kids/Videogames`
+- **Web (producción):** `https://gem4kids.github.io/Videogames/`
+- **Repositorio:** `https://github.com/gem4kids/Videogames`
+
+## 12. Lecciones WASM (pygbag) aprendidas
+- `__file__` no existe en WASM al importar → proteger con `try/except` en constantes globales
+- `pygame.init()` completo puede bloquear → usar `pygame.display.init()` + `pygame.font.init()`
+- `ume_block` debe ser `0` en `docs/index.html` para arranque sin bloqueo de audio
+- `data-os` sin `snd` (ej. `vtx,fs,gui`) para evitar AudioContext blocking en Firefox/Chrome
+- `git push --force` necesario porque GitHub Actions hace commits automáticos en cada deploy
