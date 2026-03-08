@@ -14,7 +14,10 @@ ANCHO, ALTO      = 800, 600
 FPS              = 60
 PUNTOS_SET       = 5           # Puntos necesarios para ganar un set
 SETS_PARA_GANAR  = 2           # Sets necesarios para ganar la partida (mejor de 3)
-ARCHIVO_RANKING  = os.path.join(os.path.dirname(__file__), "ranking.json")
+try:
+    ARCHIVO_RANKING = os.path.join(os.path.dirname(__file__), "ranking.json")
+except Exception:
+    ARCHIVO_RANKING = "ranking.json"
 
 # Tiempo en segundos entre apariciones de potenciadores
 INTERVALO_POWERUP = 8
