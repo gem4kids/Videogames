@@ -33,9 +33,10 @@ jobs:
         run: |
           cp -r src/build/web/. docs/
 
-      - name: Corregir bug de doble barra en URL de browserfs (pygbag 0.9.3)
+      - name: Descargar browserfs.min.js localmente y actualizar referencia en index.html
         run: |
-          sed -i 's|cdn/0.9.3//browserfs|cdn/0.9.3/browserfs|g' docs/index.html
+          curl -sL "https://pygame-web.github.io/cdn/0.9.3/browserfs.min.js" -o docs/browserfs.min.js
+          sed -i 's|<script src="https://pygame-web.github.io/cdn/0.9.3/[/]*browserfs.min.js"></script>|<script src="browserfs.min.js"></script>|g' docs/index.html
 
       - name: Commit y push de /docs actualizado
         run: |
